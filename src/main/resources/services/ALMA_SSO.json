@@ -1,0 +1,14 @@
+{
+ "@class" : "org.jasig.cas.services.RegexRegisteredService",
+ "serviceId" : "^(https|http)://.+",
+ "name" : "ALMA_SSO",
+ "id" : 1,
+ "description" : "Accept all services",
+ "accessStrategy" : {
+  "@class" : "org.jasig.cas.services.DefaultRegisteredServiceAccessStrategy",
+  "enabled" : true,
+  "ssoEnabled" : true,
+  "requireAllAttributes" : false,
+  "caseInsensitive" : false
+ }
+}

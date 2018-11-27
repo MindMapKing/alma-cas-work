@@ -1,0 +1,132 @@
+package alma.obops.cas;
+
+import java.security.GeneralSecurityException;
+import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.security.auth.login.FailedLoginException;
+import javax.xml.bind.DatatypeConverter;
+
+import org.apache.tomcat.jdbc.pool.DataSource;
+import org.apereo.cas.authentication.HandlerResult;
+import org.apereo.cas.authentication.PreventedException;
+import org.apereo.cas.authentication.UsernamePasswordCredential;
+import org.apereo.cas.authentication.handler.support.AbstractUsernamePasswordAuthenticationHandler;
+import org.apereo.cas.authentication.principal.Principal;
+import org.apereo.cas.authentication.principal.PrincipalFactory;
+import org.apereo.cas.services.ServicesManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
+
+// refer to https://apereo.github.io/2017/02/02/cas51-authn-handlers/
+
+@Component
+public class AlmaAuthenticationHandler extends AbstractUsernamePasswordAuthenticationHandler {
+
+    private static final String SELECT_ACCOUNT = 
+        "SELECT account_id " +
+        "FROM   account " + 
+        "WHERE  account_id = ? " + 
+        "AND    active = 'T' " +
+        "AND    password_digest = ?";
+
+    private static final String SELECT_ROLES = 
+        "SELECT    application, name " + 
+        "FROM      role " +
+        "LEFT JOIN account_role ON role.role_no = account_role.role_no " + 
+        "WHERE     account_role.account_id = ? " +
+        "ORDER BY  application, name";
+    
+    Logger log = LoggerFactory.getLogger( AlmaAuthenticationHandler.class.getSimpleName() );
+
+    @Autowired
+    private Environment env;
+    private JdbcTemplate jdbcTemplate;
+
+    public AlmaAuthenticationHandler( String name, 
+                                      ServicesManager servicesManager, 
+                                      PrincipalFactory principalFactory,
+                                      Integer order) {
+        super(name, servicesManager, principalFactory, order);
+    }
+
+    @PostConstruct
+    private void initDataSource() {
+        // Instantiate Tomcat connection pool
+        DataSource dataSource = new DataSource();
+        dataSource.setDriverClassName(env.getProperty("alma.datasource.driver-class-name"));
+        dataSource.setUrl( env.getProperty(      "alma.datasource.url" ));
+        dataSource.setUsername( env.getProperty( "alma.datasource.username" ));
+        dataSource.setPassword( env.getProperty( "alma.datasource.password" ));
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        log.info( "alma.datasource.url={}", env.getProperty("alma.datasource.url" ));
+        // log.info("environment={}", env);
+    }
+
+    protected HandlerResult authenticateUsernamePasswordInternal (
+        final UsernamePasswordCredential credential,
+        final String originalPassword) throws GeneralSecurityException, PreventedException {
+    	log.debug( "credential::{}", credential );
+        return authenticate(credential);
+    }
+
+    private HandlerResult authenticate( final UsernamePasswordCredential credential ) throws FailedLoginException {
+
+        String username = credential.getUsername().trim();
+        String password  = credential.getPassword().trim();
+        String password_digest = computeMD5Hash( password ); // Compute MD5 hash of the password
+    	log.info( ">>> password_digest: {}", password_digest );
+
+        try {
+            Map<String, Object> attributes = new HashMap<>();
+            
+            // query DB for username
+            Map<String,Object> dbCredentials =
+                jdbcTemplate.queryForMap( SELECT_ACCOUNT, username, password_digest );
+            Object t = dbCredentials.get( "account_id" );
+            if( t == null ) {
+                throw new FailedLoginException( "Invalid credentials" );
+            }
+            
+            // query DB for roles
+            List<String> roleList = new ArrayList<>();
+            List<Map<String,Object>> rows = 
+                jdbcTemplate.queryForList( SELECT_ROLES, username );
+            for( Map<String,Object> row : rows ) {
+                String name        = row.get( "name" ).toString().trim();
+                String application = row.get( "application" ).toString().trim();
+                roleList.add( application + "/" + name );
+            }
+            log.info( "roleList: {}", roleList );
+
+            attributes.put( "roles", roleList );
+            Principal principal = principalFactory.createPrincipal( username, attributes );
+			return createHandlerResult( credential, principal, null );            
+        }
+        catch( Exception e ) {
+            throw new RuntimeException( e );
+        }
+    }
+
+    // From https://www.baeldung.com/java-md5
+	private String computeMD5Hash( String password ) {
+		try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(password.getBytes());
+            byte[] digest = md.digest();
+            return DatatypeConverter.printHexBinary( digest ).toLowerCase();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+}

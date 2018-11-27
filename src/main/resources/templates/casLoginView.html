@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout">
+
+<head>
+    <title>ALMA blah blah</title>
+</head>
+
+<body id="cas" class="login">
+<div layout:fragment="content">
+	<div class="row">
+		<!-- side menu 
+		<div id="menu" class="col-md-2">
+			<div th:replace="fragments/esosidemenu" />
+		</div>
+		-->
+		<div class="col-md-10">
+			<!-- login form -->
+			<div id="formTitle">
+				<h4>Login</h4>
+			</div>
+			<form class="form-horizontal" method="post" id="fm1" th:object="${credential}">
+				<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+					Login failed.
+				</div>
+				<div class="form-group">
+					<label for="username" class="col-sm-2 control-label">Username</label>
+					<div class="col-sm-4">
+	 					<input class="required form-control"
+                       		id="username"
+                       		size="25"
+                       		tabindex="1"
+                       		type="text"
+                       		th:disabled="${guaEnabled}"
+                       		th:field="*{username}"
+                       		th:accesskey="#{screen.welcome.label.netid.accesskey}"
+                       		autocomplete="off"
+                                placeholder="Username" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="password" class="col-sm-2 control-label">Password</label>
+					<div class="col-sm-4">
+						<input class="required form-control"
+							type="password"
+							id="password"
+							size="25"
+							tabindex="2"
+							th:accesskey="#{screen.welcome.label.password.accesskey}"
+							th:field="*{password}"
+							autocomplete="off"
+							placeholder="Password" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
+						<input type="hidden" name="_eventId" value="submit"/>
+						<input type="hidden" name="geolocation"/>
+						<button type="submit" class="btn btn-primary">Login</button>
+					</div>
+				</div>
+			</form>
+
+			<script type="text/javascript" th:inline="javascript">
+				var i = [[#{screen.welcome.button.loginwip}]]
+				$("#fm1").submit(function() {
+					$(":submit").attr("disabled", true);
+					$(":submit").attr("value", i);
+					return true;
+				});
+			</script>
+			<!--
+				<p>
+				<ul>
+					<li><a href="http://www.eso.org/UserPortal/pre-authentication/forgottenUsername.eso">I forgot my ESO User Portal username.</a></li>
+					<li><a href="http://www.eso.org/UserPortal/pre-authentication/forgottenPassword.eso">I forgot my ESO User Portal password.</a></li>
+					<li><a href="http://www.eso.org/UserPortal/pre-authenticationSecure/registration.eso">I would like to create a new account.</a></li>
+				</ul>
+			</p>
+			-->
+			<p>
+				For security reasons, please log out and exit your web browser
+				when you have finished accessing services that require authentication!
+				<br/><br/>
+			</p>
+		</div>
+	</div>
+</div>
+</body>
+</html>

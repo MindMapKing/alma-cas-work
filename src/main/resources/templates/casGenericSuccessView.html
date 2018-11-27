@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout">
+
+<head>
+    <title>Login successful</title>
+</head>
+
+<body id="cas">
+<div layout:fragment="content">
+    <div class="row">
+		<!-- side menu
+		<div id="menu" class="col-md-2">
+			<div th:replace="fragments/esosidemenu" />
+        </div>
+         -->
+		<div class="col-md-10">
+			<div id="formTitle">
+				<h4>Login successful</h4>
+            </div>
+            <p>
+                You have successfully logged into blah blah.
+            </p>
+            <p>
+                For security reasons, please Log Out and Exit your web browser
+                when you are done accessing services that require authentication!
+            </p>
+        </div>
+    </div>
+</body>
+</html>
