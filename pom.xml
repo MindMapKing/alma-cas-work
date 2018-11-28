@@ -71,21 +71,26 @@
             <artifactId>cas-server-core-authentication</artifactId>
             <version>${cas.version}</version>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-rest</artifactId>
             <version>${cas.version}</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.apereo.cas</groupId>-->
-            <!--<artifactId>cas-server-support-token</artifactId>-->
-            <!--<version>${cas.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.apereo.cas</groupId>-->
-            <!--<artifactId>cas-server-support-token-webflow</artifactId>-->
-            <!--<version>${cas.version}</version>-->
-        <!--</dependency>-->
+        -->
+        <!-- Enabling OIDC support -->
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-oidc</artifactId>
+            <version>${cas.version}</version>
+        </dependency>
+        <!-- Needed for OIDC client registration -->
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-json-service-registry</artifactId>
+            <version>${cas.version}</version>
+        </dependency>
+
         <!-- Oracle dependencies -->
         <dependency>
                 <groupId>com.oracle</groupId>
@@ -96,12 +101,6 @@
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jdbc</artifactId>
             <version>8.5.14</version>
-        </dependency>
-        <!-- ULa: allow for JSON file based registry of services which can use CAS -->
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-support-json-service-registry</artifactId>
-            <version>${cas.version}</version>
         </dependency>
     </dependencies>
 

@@ -14,10 +14,12 @@ public class AlmaAuthenticationConfiguration implements AuthenticationEventExecu
     // @Autowired
     // private CasConfigurationProperties casProperties;
 
+    private static final String HANDLER_ID = "ALMA Authentication Handler";
+
     @Bean
     public AuthenticationHandler esoAuthenticationHandler() {
         final AlmaAuthenticationHandler handler =
-                new AlmaAuthenticationHandler( "Alma Auth Handler", null, null, null );
+                new AlmaAuthenticationHandler( HANDLER_ID, null, null, null );
         /*
             Configure the handler by invoking various setter methods.
             Note that you also have full access to the collection of resolved CAS settings.

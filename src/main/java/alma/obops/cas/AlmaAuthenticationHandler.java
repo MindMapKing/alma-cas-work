@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
 public class AlmaAuthenticationHandler extends AbstractUsernamePasswordAuthenticationHandler {
 
     private static final String SELECT_ACCOUNT = 
-        "SELECT account_id " +
+        "SELECT account_id, email, firstname, lastname " +
         "FROM   account " + 
         "WHERE  account_id = ? " + 
         "AND    active = 'T' " +
@@ -86,7 +86,6 @@ public class AlmaAuthenticationHandler extends AbstractUsernamePasswordAuthentic
     	log.info( ">>> password_digest: {}", password_digest );
 
         try {
-            Map<String, Object> attributes = new HashMap<>();
             
             // query DB for username
             Map<String,Object> dbCredentials =
@@ -96,6 +95,11 @@ public class AlmaAuthenticationHandler extends AbstractUsernamePasswordAuthentic
                 throw new FailedLoginException( "Invalid credentials" );
             }
             
+            Map<String, Object> attributes = new HashMap<>();
+            attributes.put( "email",     dbCredentials.get( "email" ));
+            attributes.put( "firstname", dbCredentials.get( "firstname" ));
+            attributes.put( "lastname",  dbCredentials.get( "lastname" ));
+
             // query DB for roles
             List<String> roleList = new ArrayList<>();
             List<Map<String,Object>> rows = 
@@ -108,6 +112,8 @@ public class AlmaAuthenticationHandler extends AbstractUsernamePasswordAuthentic
             log.info( "roleList: {}", roleList );
 
             attributes.put( "roles", roleList );
+
+            log.info( "attributes: {}", attributes.toString() );
             Principal principal = principalFactory.createPrincipal( username, attributes );
 			return createHandlerResult( credential, principal, null );            
         }
@@ -119,7 +125,7 @@ public class AlmaAuthenticationHandler extends AbstractUsernamePasswordAuthentic
     // From https://www.baeldung.com/java-md5
 	private String computeMD5Hash( String password ) {
 		try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
+            MessageDigest md = MessageDigest.getInstance( "MD5" );
             md.update(password.getBytes());
             byte[] digest = md.digest();
             return DatatypeConverter.printHexBinary( digest ).toLowerCase();
