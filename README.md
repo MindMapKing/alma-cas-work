@@ -12,7 +12,7 @@ Active profile is currently hardcoded to _int_ in `src/main/resources/bootstrap.
 
 **TODO** Externalize that to archiveConfig.properties
 
-To build run `mvn clean package` from the command line, it will produce `./target/cas.war`
+To build run `mvn clean package` from the command line, it will produce `./target/cas-server-<version>.war`, where _&lt;version>_ is something like _OBOPS-2019.02_
 
 ## Configure
 
@@ -85,7 +85,7 @@ server.ssl.key-alias=tomcat
 ### Import the certificate inside the JRE keystore
 
 You'll need to make the JRE trust your self-signed certificate. First of all, you need to extact it from the keystore:  
-`keytool -export -keystore $ACSDATA/config/cas/keystore.jks -alias tomcat -file certificate.crt`  
+`keytool -export -keystore $ACSDATA/config/cas/keystore.p12 -alias tomcat -file certificate.crt`  
 
 #### Linux and MacOS
 
@@ -109,8 +109,10 @@ bin\keytool.exe -importcert -file path-to-certificate.crt -alias tomcat -keystor
 
 ## Run
 
+## Run the CAS/OAuth/OIDC server
+
 * `export _JAVA_OPTIONS="-Dcas.standalone.config=$ACSDATA/config"`
-* `java -jar target/cas.war`
+* `java -jar target/target/cas-server-<version>.war`
 
 ## Basic test
 
