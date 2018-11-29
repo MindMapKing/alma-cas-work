@@ -87,6 +87,8 @@ server.ssl.key-alias=tomcat
 You'll need to make the JRE trust your self-signed certificate. First of all, you need to extact it from the keystore:  
 `keytool -export -keystore $ACSDATA/config/cas/keystore.jks -alias tomcat -file certificate.crt`  
 
+#### Linux and MacOS
+
 You then need to locate your JDK home. On MacOS you can use:  
 `export JAVA_HOME=$(/usr/libexec/java_home)`
 
@@ -96,6 +98,14 @@ Then (you'll probably need _sudo_ privileges):
 `sudo keytool -importcert -file certificate.crt -alias tomcat -keystore $JAVA_HOME/jre/lib/security/cacerts`
 
 If everything went right, you’d see the message _Certificate was added to keystore_.
+
+#### Windows
+
+Assuming your JDK is _1.8.0_162_:
+```
+cd "c:\Program Files\Java\jdk1.8.0_162"
+bin\keytool.exe -importcert -file path-to-certificate.crt -alias tomcat -keystore jre\lib\security\cacerts
+```
 
 ## Run
 
