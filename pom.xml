@@ -68,9 +68,20 @@
         </dependency>
         <dependency>
             <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-core-authentication</artifactId>
+            <artifactId>cas-server-core</artifactId>
             <version>${cas.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-core-authentication-api</artifactId>
+            <version>${cas.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-core-api-configuration-model</artifactId>
+            <version>${cas.version}</version>
+        </dependency>
+
         <!--
         <dependency>
             <groupId>org.apereo.cas</groupId>
@@ -105,11 +116,12 @@
     </dependencies>
 
     <properties>
-        <cas.version>5.1.2</cas.version>
+        <!-- <cas.version>5.1.2</cas.version> -->
+        <cas.version>5.3.4</cas.version>
         <springboot.version>1.5.3.RELEASE</springboot.version>
         <!-- app.server could be -jetty, -undertow, -tomcat, or blank if you plan to provide appserver -->
-        <!-- TBi: disable embedded Tomcat -->
-        <app.server>-jetty</app.server>
+        <!-- TBi: disable embedded Tomcat-->
+        <app.server>-jetty</app.server> 
         <oracle.version>12.2.0.1</oracle.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>

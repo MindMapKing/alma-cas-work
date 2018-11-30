@@ -111,7 +111,7 @@ bin\keytool.exe -importcert -file path-to-certificate.crt -alias tomcat -keystor
 
 ## Run the CAS/OAuth/OIDC server
 
-* `export _JAVA_OPTIONS="-Dcas.standalone.config=$ACSDATA/config"`
+* `export _JAVA_OPTIONS="-Dcas.standalone.configurationDirectory=$ACSDATA/config"`
 * `java -jar target/target/cas-server-<version>.war`
 
 ## Basic test
@@ -148,7 +148,7 @@ For more info about OIDC endpoints, see https://apereo.github.io/cas/5.0.x/insta
 
 ## Notes
 
-* Package `alma.obops.cas` contain ALMA- and Oracle-specific code for verifying
+* Java package `alma.obops.cas` contain ALMA- and Oracle-specific code for verifying
   credentials and retrieving user roles.
 
 * _Very_ useful documentation

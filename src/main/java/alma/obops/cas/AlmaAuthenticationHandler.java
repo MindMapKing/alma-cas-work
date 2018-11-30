@@ -12,7 +12,7 @@ import javax.security.auth.login.FailedLoginException;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
-import org.apereo.cas.authentication.HandlerResult;
+import org.apereo.cas.authentication.AuthenticationHandlerExecutionResult;
 import org.apereo.cas.authentication.PreventedException;
 import org.apereo.cas.authentication.UsernamePasswordCredential;
 import org.apereo.cas.authentication.handler.support.AbstractUsernamePasswordAuthenticationHandler;
@@ -62,64 +62,62 @@ public class AlmaAuthenticationHandler extends AbstractUsernamePasswordAuthentic
     private void initDataSource() {
         // Instantiate Tomcat connection pool
         DataSource dataSource = new DataSource();
-        dataSource.setDriverClassName(env.getProperty("alma.datasource.driver-class-name"));
-        dataSource.setUrl( env.getProperty(      "alma.datasource.url" ));
-        dataSource.setUsername( env.getProperty( "alma.datasource.username" ));
-        dataSource.setPassword( env.getProperty( "alma.datasource.password" ));
+        dataSource.setDriverClassName( env.getProperty( "alma.datasource.driver-class-name"));
+        dataSource.setUrl( env.getProperty(             "alma.datasource.url" ));
+        dataSource.setUsername( env.getProperty(        "alma.datasource.username" ));
+        dataSource.setPassword( env.getProperty(        "alma.datasource.password" ));
         jdbcTemplate = new JdbcTemplate(dataSource);
-        log.info( "alma.datasource.url={}", env.getProperty("alma.datasource.url" ));
+        log.info( " >>> alma.datasource.url={}", env.getProperty("alma.datasource.url" ));
         // log.info("environment={}", env);
     }
 
-    protected HandlerResult authenticateUsernamePasswordInternal (
-        final UsernamePasswordCredential credential,
+    protected AuthenticationHandlerExecutionResult authenticateUsernamePasswordInternal (
+
+    	final UsernamePasswordCredential credential,
         final String originalPassword) throws GeneralSecurityException, PreventedException {
-    	log.debug( "credential::{}", credential );
-        return authenticate(credential);
-    }
-
-    private HandlerResult authenticate( final UsernamePasswordCredential credential ) throws FailedLoginException {
-
-        String username = credential.getUsername().trim();
-        String password  = credential.getPassword().trim();
-        String password_digest = computeMD5Hash( password ); // Compute MD5 hash of the password
-    	log.info( ">>> password_digest: {}", password_digest );
-
-        try {
-            
-            // query DB for username
-            Map<String,Object> dbCredentials =
-                jdbcTemplate.queryForMap( SELECT_ACCOUNT, username, password_digest );
-            Object t = dbCredentials.get( "account_id" );
-            if( t == null ) {
-                throw new FailedLoginException( "Invalid credentials" );
-            }
-            
-            Map<String, Object> attributes = new HashMap<>();
-            attributes.put( "email",     dbCredentials.get( "email" ));
-            attributes.put( "firstname", dbCredentials.get( "firstname" ));
-            attributes.put( "lastname",  dbCredentials.get( "lastname" ));
-
-            // query DB for roles
-            List<String> roleList = new ArrayList<>();
-            List<Map<String,Object>> rows = 
-                jdbcTemplate.queryForList( SELECT_ROLES, username );
-            for( Map<String,Object> row : rows ) {
-                String name        = row.get( "name" ).toString().trim();
-                String application = row.get( "application" ).toString().trim();
-                roleList.add( application + "/" + name );
-            }
-            log.info( "roleList: {}", roleList );
-
-            attributes.put( "roles", roleList );
-
-            log.info( "attributes: {}", attributes.toString() );
-            Principal principal = principalFactory.createPrincipal( username, attributes );
-			return createHandlerResult( credential, principal, null );            
-        }
-        catch( Exception e ) {
-            throw new RuntimeException( e );
-        }
+    	log.info( " >>> credential: {}", credential );
+        
+    	String username = credential.getUsername().trim();
+		String password  = credential.getPassword().trim();
+		String password_digest = computeMD5Hash( password ); // Compute MD5 hash of the password
+		log.info( " >>> password_digest: {}", password_digest );
+		
+		try {
+		    
+		    // query DB for username
+		    Map<String,Object> dbCredentials =
+		        jdbcTemplate.queryForMap( SELECT_ACCOUNT, username, password_digest );
+		    Object t = dbCredentials.get( "account_id" );
+		    if( t == null ) {
+		        throw new FailedLoginException( "Invalid credentials" );
+		    }
+		    
+		    Map<String, Object> attributes = new HashMap<>();
+		    attributes.put( "email",     dbCredentials.get( "email" ));
+		    attributes.put( "firstname", dbCredentials.get( "firstname" ));
+		    attributes.put( "lastname",  dbCredentials.get( "lastname" ));
+		
+		    // query DB for roles
+		    List<String> roleList = new ArrayList<>();
+		    List<Map<String,Object>> rows = 
+		        jdbcTemplate.queryForList( SELECT_ROLES, username );
+		    for( Map<String,Object> row : rows ) {
+		        String name        = row.get( "name" ).toString().trim();
+		        String application = row.get( "application" ).toString().trim();
+		        roleList.add( application + "/" + name );
+		    }
+		    log.info( " >>> roleList: {}", roleList );
+		
+		    attributes.put( "roles", roleList );
+		
+		    log.info( ">>> attributes: {}", attributes.toString() );
+		    Principal principal = principalFactory.createPrincipal( username, attributes );
+			return createHandlerResult( credential, principal );            
+		}
+		catch( Exception e ) {
+			log.error( e.getMessage(), e );
+		    throw new RuntimeException( e );
+		}
     }
 
     // From https://www.baeldung.com/java-md5
