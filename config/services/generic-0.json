@@ -1,0 +1,7 @@
+{
+  "@class": "org.apereo.cas.services.RegexRegisteredService",
+  "id": 0,
+  "name": "Any application",
+  "serviceId": "^(https?|http?)://.*",
+  "evaluationOrder": 2000
+  }
