@@ -71,24 +71,94 @@
             <artifactId>cas-server-core</artifactId>
             <version>${cas.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-core-authentication-api</artifactId>
-            <version>${cas.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-core-api-configuration-model</artifactId>
-            <version>${cas.version}</version>
-        </dependency>
 
-        <!--
-        <dependency>
+ 
+        <!-- <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-rest</artifactId>
             <version>${cas.version}</version>
         </dependency>
-        -->
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-rest-tokens</artifactId>
+            <version>${cas.version}</version>
+        </dependency> -->
+        
+        <!-- 
+	        The following dependencies are needed at compile time for the
+    	    classes in src/main/java
+         -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.pac4j</groupId>
+            <artifactId>pac4j-core</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-core-util-api</artifactId>
+            <version>${cas.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-core-services-api</artifactId>
+            <version>${cas.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-core-web-api</artifactId>
+            <version>${cas.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-oauth</artifactId>
+            <version>${cas.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-oauth-api</artifactId>
+            <version>${cas.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-oauth-services</artifactId>
+            <version>${cas.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-oauth-core</artifactId>
+            <version>${cas.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-oidc-core</artifactId>
+            <version>${cas.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-oidc-services</artifactId>
+            <version>${cas.version}</version>
+        </dependency>
+        <dependency>
+             <!-- Needed for custom authentication -->
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-core-authentication-api</artifactId>
+            <version>${cas.version}</version>
+        </dependency> 
+        <dependency>
+            <!-- Needed for custom authentication -->
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-core-api-configuration-model</artifactId>
+            <version>${cas.version}</version>
+        </dependency>
+        
+        
+        
         <!-- Enabling OIDC support -->
         <dependency>
             <groupId>org.apereo.cas</groupId>

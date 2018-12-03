@@ -5,7 +5,7 @@
 	"serviceId": "^https://app.example.com/redirect",
 	"signIdToken": true,
 	"implicit": true,
-	"bypassApprovalPrompt": false,
+	"bypassApprovalPrompt": true,
 	"name": "Demo application",
 	"id": 1000,
 	"evaluationOrder": 1000,

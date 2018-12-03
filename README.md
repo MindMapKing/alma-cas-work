@@ -131,7 +131,7 @@ After login you will be redirected to _example.com/redirect_: the URL will conta
 ### Resource Owner Credentials grant (_Password grant_)
 
 You can obtain an access token passing the credentials of a Resource Owner (end user) in the URL:  
-`https://ma24088.ads.eso.org:8019/cas/oauth2.0/accessToken?grant_type=password&client_id=demoOIDC&username=obops&password=...`
+`https://ma24088.ads.eso.org:8019/cas/oauth2.0/accessToken?grant_type=password&client_id=demoOIDC&username=...&password=...`
 
 
 ### Client Credentials grant
@@ -176,11 +176,27 @@ You should be taken to CAS' login page. Once the authentication/authorization pr
 
 **TODO** See https://apereo.github.io/cas/5.3.x/installation/OAuth-OpenId-Authentication.html#authorization-code
 
+### Client Credentials grant
+
+You can obtain an JWT ID token passing the credentials of a Client (application) in the URL:  
+`https://ma24088.ads.eso.org:8019/cas/oidc/token?response_type=id_token%20token&grant_type=password&client_id=demoOIDC&username=...&password=...`
+
+
+That will return a JSON structure including the JWT:  
+```
+{
+  "access_token": "AT-1-DJAub2UhX2ftcOyJMbHyNPYG5MnBSN7f",
+  "token_type": "bearer",
+  "expires_in": 28800,
+  "id_token": "eyJhbGciOiJSUzI1NiIsI..."
+}
+```
 
 ## Notes
 
-* Java package `alma.obops.cas` contain ALMA- and Oracle-specific code for verifying
-  credentials and retrieving user roles.
+* Java package `alma.obops.cas` contain ALMA- and Oracle-specific code for verifying credentials and retrieving user roles.
+
+* Java packages `org.apereo.cas...` contain patched versions of the CAS source code.
 
 * _Very_ useful documentation
    * About CAS/OIDC: https://mirzlab.github.io/2017/07/16/cas5-oidc-provider/
