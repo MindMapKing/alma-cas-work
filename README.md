@@ -178,11 +178,12 @@ Once you have an access token you can retrieve the profile of the logged-in user
 Example:
 ```
 {
-  "attributes" : {
-    "givenName" : "ObOps",
-    "lastName" : "Subsystem",
-    ....
-  }
+  "givenName" : "ObOps",
+  "lastName" : "Subsystem",
+  "mail" : "obops1183@noname.domain.org",
+  "roles" : [ "ARCHIVE/ROLE_SOURCECAT_ADMIN", ... ],
+  ...
+  "id" : "obops"
 }
 ```
 
