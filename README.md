@@ -98,7 +98,9 @@ bin\keytool.exe -importcert -file path-to-certificate.crt -alias tomcat -keystor
 
 ## Launch the CAS/OAuth/OIDC server
 
-* `export _JAVA_OPTIONS="-Dcas.standalone.configurationDirectory=$ACSDATA/config -Dcas.log.dir=/tmp"`
+The CAS application will write its log files to `/var/log/cas`, make sure that directory exists and is writable. (See _src/main/resources/log4j2.xml_ to change that path.)
+
+* `export _JAVA_OPTIONS="-Dcas.standalone.configurationDirectory=$ACSDATA/config"`
 * `java -jar target/target/cas-server-<version>.war`
 
 **NOTE** In the following examples, replace _ma24088.ads.eso.org_ with the fully qualified hostname of the machine running the CAS server; never use _localhost_. 
