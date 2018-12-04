@@ -114,11 +114,13 @@ The CAS application will write its log files to `/var/log/cas`, make sure that d
 
 ## OAuth2
 
-For more info about OAuth 2.0 endpoints see https://apereo.github.io/cas/5.3.x/installation/OAuth-OpenId-Authentication.html
+See [here](https://alexbilbie.com/guide-to-oauth-2-grants/) for a description of
+the OAuth2/OIDC grant (flow) types.
 
 ### Implicit Authorization grant (GET)
 
-See [this _Implicit Authorization_ grant description](https://developer.okta.com/blog/2018/05/24/what-is-the-oauth2-implicit-grant-type).
+See [here](https://developer.okta.com/blog/2018/05/24/what-is-the-oauth2-implicit-grant-type)
+for more info on the _Implicit Authorization_ grant type. 
 
 Navigate to:  
 `https://ma24088.ads.eso.org:8019/cas/oauth2.0/authorize?response_type=token&client_id=demoOIDC&redirect_uri=https%3A%2F%2Fapp.example.com%2Fredirect`
@@ -128,9 +130,36 @@ After login you will be redirected to _example.com/redirect_: the URL will conta
 
 ### Authorization Code grant
 
-**TODO** See https://apereo.github.io/cas/5.3.x/installation/OAuth-OpenId-Authentication.html#authorization-code
+See
+[here](https://developer.okta.com/blog/2018/04/10/oauth-authorization-code-grant-type)
+for for more info on the _Authorization Code_ grant type.
+
+In a browser navigate to `https://ma24088.ads.eso.org:8019/cas/oauth2.0/authorize?response_type=code&client_id=demoOIDC&redirect_uri=https%3A%2F%2Fapp.example.com%2Fredirect`, will redirect to login page, then to `https://app.example.com/redirect?code=OC-10-1jHfj....` with some authorization code.
+
+**NOTE** The authorization code (`OC-10-1jHfj....`) has limited validity, please perform the next step(s) within a minuto or so.
+
+Query the auth server with that auth code:
+```shell
+curl -k -u demoOIDC:s3cr3t \
+  https://ma24088.ads.eso.org:8019/cas/oauth2.0/accessToken \
+	  -d grant_type=authorization_code \
+	  -d redirect_uri=https://app.example.com/redirect \
+	  -d code=OC-10-1jHfj....
+```
+Will return an access token:
+`{"access_token":"AT-11-BHoGu4r..." ...}`
+
+(Alternatively, you can navigate to  
+`https://ma24088.ads.eso.org:8019/cas/oauth2.0/accessToken?grant_type=authorization_code&client_id=demoOIDC&client_secret=s3cr3t&redirect_uri=https%3A%2F%2Fapp.example.com%2Fredirect&code=OC-10-1jHfj....`  
+in a browser, and you should get the same access token.)
+
+With that token you for instance [retrieve the user profile](#user-profile).
+
 
 ### Resource Owner Credentials grant (_Password grant_)
+
+See [here](https://oauthlib.readthedocs.io/en/latest/oauth2/grants/password.html)
+for for more info on the _Resource Owner Credentials_ grant (called _Password grant_ in the CAS documentation).
 
 You can obtain an access token passing the credentials of a Resource Owner (end user) in the URL:  
 `https://ma24088.ads.eso.org:8019/cas/oauth2.0/accessToken?grant_type=password&client_id=demoOIDC&username=...&password=...`
@@ -159,11 +188,14 @@ Example:
 
 Alternatively, you can pass the access token in an HTTP Header: `Authorization: Bearer AT-14-Sdj1AA...`
 
-**NOTE** If you obtained the access token by way of a Client Credentials grant the profile will only include the client ID
+**NOTE** If you obtained the access token by way of a Client Credentials grant the profile will only include the client ID.
 
 ## OIDC
 
-For more info about OpenID Connect endpoints, see https://apereo.github.io/cas/5.3.x/installation/OIDC-Authentication.html .
+See [here](https://alexbilbie.com/guide-to-oauth-2-grants/) for a description of
+the OAuth2/OIDC grant (flow) types.
+
+For more info about OpenID Connect endpoints, see [here](https://apereo.github.io/cas/5.3.x/installation/OIDC-Authentication.html).
 
 ### Implicit Authorization grant
 
@@ -176,7 +208,28 @@ You should be taken to CAS' login page. Once the authentication/authorization pr
 
 ### Authorization Code grant
 
-**TODO** See https://apereo.github.io/cas/5.3.x/installation/OAuth-OpenId-Authentication.html#authorization-code
+See
+[here](https://developer.okta.com/blog/2018/04/10/oauth-authorization-code-grant-type)
+for for more info on the _Authorization Code_ grant type.
+
+In a browser navigate to `https://ma24088.ads.eso.org:8019/cas/oidc/authorize?response_type=code&client_id=demoOIDC&redirect_uri=https%3A%2F%2Fapp.example.com%2Fredirect`, will redirect to login page, then to `https://app.example.com/redirect?code=OC-17-i43YO...` with some authorization code.
+
+**NOTE** The authorization code (`OC-17-i43YO...`) has limited validity, please perform the next step(s) within a minuto or so.
+
+Query the auth server with that auth code:
+```shell
+curl -k -u demoOIDC:s3cr3t \
+  https://ma24088.ads.eso.org:8019/cas/oidc/token \
+	  -d grant_type=authorization_code \
+	  -d redirect_uri=https://app.example.com/redirect \
+	  -d code=OC-17-i43YO....
+```
+Will return an access token and an ID token (JWT):
+`{"access_token":"AT-13-fyPZz...","id_token":"eyJhbGciOi..."}`
+
+(Alternatively, you can navigate to  
+`https://ma24088.ads.eso.org:8019/oidc/token?grant_type=authorization_code&client_id=demoOIDC&client_secret=s3cr3t&redirect_uri=https%3A%2F%2Fapp.example.com%2Fredirect&code=OC-10-1jHfj....`  
+in a browser, and you should get the same tokens.)
 
 ### Client Credentials grant
 
