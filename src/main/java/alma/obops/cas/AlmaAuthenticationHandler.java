@@ -9,9 +9,9 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.security.auth.login.FailedLoginException;
+import javax.sql.DataSource;
 import javax.xml.bind.DatatypeConverter;
 
-import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apereo.cas.authentication.AuthenticationHandlerExecutionResult;
 import org.apereo.cas.authentication.PreventedException;
 import org.apereo.cas.authentication.UsernamePasswordCredential;
@@ -22,6 +22,7 @@ import org.apereo.cas.services.ServicesManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -49,6 +50,10 @@ public class AlmaAuthenticationHandler extends AbstractUsernamePasswordAuthentic
 
     @Autowired
     private Environment env;
+    
+    @Autowired
+    private DataSource dataSource;
+    
     private JdbcTemplate jdbcTemplate;
 
     public AlmaAuthenticationHandler( String name, 
@@ -59,16 +64,10 @@ public class AlmaAuthenticationHandler extends AbstractUsernamePasswordAuthentic
     }
 
     @PostConstruct
-    private void initDataSource() {
-        // Instantiate Tomcat connection pool
-        DataSource dataSource = new DataSource();
-        dataSource.setDriverClassName( env.getProperty( "alma.datasource.driver-class-name"));
-        dataSource.setUrl( env.getProperty(             "alma.datasource.url" ));
-        dataSource.setUsername( env.getProperty(        "alma.datasource.username" ));
-        dataSource.setPassword( env.getProperty(        "alma.datasource.password" ));
-        jdbcTemplate = new JdbcTemplate(dataSource);
-        log.info( " >>> alma.datasource.url={}", env.getProperty("alma.datasource.url" ));
-        // log.info("environment={}", env);
+    private void initJdbcTemplate() {
+        jdbcTemplate = new JdbcTemplate( dataSource );
+        // String url = env.getProperty( "archive.relational.connection" );
+        // log.info( " >>> alma.datasource.url={}", url );
     }
 
     protected AuthenticationHandlerExecutionResult authenticateUsernamePasswordInternal (

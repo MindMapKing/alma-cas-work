@@ -1,1 +1,3 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=alma.obops.cas.AlmaAuthenticationConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+	alma.obops.cas.AlmaAuthenticationConfiguration,\
+	alma.obops.cas.AlmaDataSourceConfiguration
