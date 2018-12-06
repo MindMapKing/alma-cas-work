@@ -12,7 +12,7 @@ Configuration files are
 
 Active profile is currently hardcoded to _base_ in `src/main/resources/bootstrap.properties`.
 
-To build run `mvn clean package` from the command line, it will produce `./target/cas-server-<version>.war`, where _&lt;version>_ is something like _OBOPS-2019.02_
+To build run `mvn clean package` from the command line, it will produce `./target/cas-oidc-server-<version>.war`, where _&lt;version>_ is something like _OBOPS-2019.02_
 
 ## Configure
 
@@ -109,7 +109,7 @@ bin\keytool.exe -importcert -file path-to-certificate.crt -alias tomcat -keystor
 The CAS application will write its log files to `/var/log/cas`, make sure that directory exists and is writable. (See _src/main/resources/log4j2.xml_ to change that path.)
 
 * `export _JAVA_OPTIONS="-Dcas.standalone.configurationDirectory=$ACSDATA/config"`
-* `java -jar target/target/cas-server-<version>.war`
+* `java -jar target/target/cas-oidc-server-<version>.war`
 
 **NOTE** In the following examples, replace _ma24088.ads.eso.org_ with the fully qualified hostname of the machine running the CAS server; never use _localhost_. 
 
