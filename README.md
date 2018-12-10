@@ -189,7 +189,7 @@ Example:
   "givenName" : "ObOps",
   "lastName" : "Subsystem",
   "mail" : "obops1183@noname.domain.org",
-  "roles" : [ "ARCHIVE/ROLE_SOURCECAT_ADMIN", ... ],
+  "roles" : [ "ARCHIVE/SOURCECAT_ADMIN", ... ],
   ...
   "id" : "obops"
 }
