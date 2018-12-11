@@ -225,7 +225,8 @@ In a browser navigate to `https://ma24088.ads.eso.org:8019/cas/oidc/authorize?re
 
 **NOTE** The authorization code (`OC-17-i43YO...`) has limited validity, please perform the next step(s) within a minuto or so.
 
-Query the auth server with that auth code:
+Query the auth server with that authorization code, you can use any 
+http client, we're using _cURL_:
 ```shell
 curl -k -u demoOIDC:s3cr3t \
   https://ma24088.ads.eso.org:8019/cas/oidc/token \
