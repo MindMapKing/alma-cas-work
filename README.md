@@ -18,7 +18,7 @@ To build run `mvn clean package` from the command line, it will produce `./targe
 
 * Create directory _$ACSDATA/config/cas_ and copy the contents of the _config_ directory to that. (Note the _config/services_ directory.)
 
-* The config directory includes a private/public [JSON Web Key Set](https://tools.ietf.org/pdf/rfc7517.pdf)  
+* The config directory includes a private/public [JSON Web Key Set](https://tools.ietf.org/pdf/rfc7517.pdf)
   to generate JWTs in 
   _$ACSDATA/config/cas/oidc-keystore.jwks_. The keypair set can be regenerated
   with some Web service like https://mkjwk.org or https://connect2id.com/products/nimbus-jose-jwt/generator (in production). It looks like this:  
