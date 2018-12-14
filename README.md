@@ -1,4 +1,4 @@
-# ALMA CAS  — OAuth 2.0 — OpenID Connect Server
+# ALMA CAS/OAuth2/OIDC Server
 
 A CAS server implementing OAauth 2.0 (OAuth2) and 
 OpenID Connect (OIDC) in addition
@@ -18,8 +18,8 @@ To build run `mvn clean package` from the command line, it will produce `./targe
 
 * Create directory _$ACSDATA/config/cas_ and copy the contents of the _config_ directory to that. (Note the _config/services_ directory.)
 
-* The config directory includes a private/public JSON keypair set 
-  for the tokens in 
+* The config directory includes a private/public [JSON Web Key Set](https://tools.ietf.org/pdf/rfc7517.pdf)  
+  to generate JWTs in 
   _$ACSDATA/config/cas/oidc-keystore.jwks_. The keypair set can be regenerated
   with some Web service like https://mkjwk.org or https://connect2id.com/products/nimbus-jose-jwt/generator (in production). It looks like this:  
   ```
@@ -205,6 +205,11 @@ See [here](https://alexbilbie.com/guide-to-oauth-2-grants/) for a description of
 the OAuth2/OIDC grant (flow) types.
 
 For more info about OpenID Connect endpoints, see [here](https://apereo.github.io/cas/5.3.x/installation/OIDC-Authentication.html).
+
+### JSON Web Key Set
+
+To retrieve the [JSON Web Key Set](https://tools.ietf.org/pdf/rfc7517.pdf) used by the authentication server to sign the JWTs it produces:  
+https://ma24088.ads.eso.org:8019/cas/oidc/jwks
 
 ### Implicit Authorization grant
 
