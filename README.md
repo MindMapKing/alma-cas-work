@@ -63,7 +63,7 @@ You'll need an _SSL certificate_ in a keystore.
 
 #### Using a real certificate 
 
-If you have a "real" SSL certificate, provided by a CA, you should import it into a keystore -- there are many resources on the Web about that. Ultimately, that certificate must be copied to the CAS config directory, e.g.  
+If you have a "real" SSL certificate, provided by a CA, you should import it into a keystore – there are many resources on the Web about that. Ultimately, the keystore file must be copied to the CAS config directory, e.g.  
 `cp .../keystore.jks ${ACSDATA}/config/cas`
 
 #### Using a self-signed certificate 
