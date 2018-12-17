@@ -55,37 +55,35 @@ To build run `mvn clean package` from the command line, it will produce `./targe
   archive.relational.passwd = s0me/passWD
   ```
 
-## Security configuration
+## CAS security configuration
 
 ### SSL certificate
-CAS _must_ be reached via HTTPS and requires a secure environment to be configured for Spring Boot — see https://www.thomasvitale.com/https-spring-boot-ssl-certificate
+CAS _must_ be reached via HTTPS and requires a secure environment to be configured for Spring Boot — see https://www.thomasvitale.com/https-spring-boot-ssl-certificate  
+You'll need an _SSL certificate_ in a keystore.
 
-You'll need a SSL certificate in a keystore and one is provided in the _config_ directory.  
-You you can recreate it as well:  
+#### Using a real certificate 
+
+If you have a "real" SSL certificate, provided by a CA, you should import it into a keystore -- there are many resources on the Web about that. Ultimately, that certificate must be copied to the CAS config directory, e.g.  
+`cp .../keystore.jks ${ACSDATA}/config/cas`
+
+#### Using a self-signed certificate 
+
+(A self-signed certificate is included in the keystore provided in the _config_ directory, it is specific to my development environment and _should be ignored_.)  
+
+During development you you can easily create a self-signed certificate:  
 `keytool -genkeypair -alias tomcat -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore keystore.p12 -validity 3650`  
 Use _changeit_ when requested a password.  
 Move _keystore.p12_, the generated keystore, to _$ACSDATA/config/cas_
 
 To view the contents of the keystore: `keytool -list -v -storetype pkcs12 -keystore $ACSDATA/config/cas/keystore.p12`
 
-### Spring Boot properties
-
-Make sure your _cas.properties_ file includes the following Spring Boot properties:
-```
-security.require-ssl=true
-server.ssl.key-store-type=PKCS12
-server.ssl.key-store=file:${ACSDATA}/config/cas/keystore.p12
-server.ssl.key-store-password=changeit
-server.ssl.key-alias=tomcat
-```
-
-### Import the certificate inside the JRE keystore
+##### Import the certificate inside the JRE keystore
 
 If you have a self-signed certificate you'll need to make the JRE trust it. First of all, you need to extact it from the keystore:  
 `keytool -export -keystore $ACSDATA/config/cas/keystore.p12 -alias tomcat -file certificate.crt`  
 You then need to locate your JDK home and import the certificate.
 
-#### Linux and MacOS 
+###### Linux and MacOS 
 
 On MacOS: `export JAVA_HOME=$(/usr/libexec/java_home)`
 
@@ -96,18 +94,30 @@ Then (you'll probably need _sudo_ privileges):
 
 If everything went right, you’d see the message _Certificate was added to keystore_.
 
-#### Windows
+###### Windows
 
 Assuming your JDK is _1.8.0_162_:
 ```
 cd "c:\Program Files\Java\jdk1.8.0_162"
 bin\keytool.exe -importcert -file path-to-certificate.crt -alias tomcat -keystore jre\lib\security\cacerts
 ```
+### Spring Boot properties
+
+Make sure your _cas.properties_ file includes the following Spring Boot properties:
+```
+security.require-ssl=true
+server.ssl.key-store-type=PKCS12
+server.ssl.key-store=file:${ACSDATA}/config/cas/<name-of-keystore-file>
+server.ssl.key-store-password=changeit
+server.ssl.key-alias=tomcat
+
+```
 
 ## Launch the CAS/OAuth/OIDC server
 
-The CAS application will write its log files to `/var/log/cas`, make sure that directory exists and is writable. (See _src/main/resources/log4j2.xml_ to change that path.)
-
+* The CAS application will write its log files to `/var/log/cas`
+** make sure that directory exists and is writable
+** see _src/main/resources/log4j2.xml_ to change that path
 * `export _JAVA_OPTIONS="-Dcas.standalone.configurationDirectory=$ACSDATA/config"`
 * `java -jar target/cas-server-<version>.war`
 
