@@ -2,15 +2,15 @@
 	"@class": "org.apereo.cas.services.OidcRegisteredService",
 	"clientId": "demoOIDC",
 	"clientSecret": "s3cr3t",
-	"serviceId": "^https://app.example.com/redirect",
+	"serviceId": "^(https?|http?)://.*",
 	"signIdToken": true,
-	"implicit": true,
+	"implicit": false,
 	"bypassApprovalPrompt": true,
 	"name": "Demo application",
 	"id": 1000,
 	"evaluationOrder": 1000,
 	"encryptIdToken": false,
 	"scopes": [ "java.util.HashSet",
-		[ "openid", "profile", "profile_full" ]
+		["full_profile" ]
 	]
 }
